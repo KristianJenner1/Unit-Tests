@@ -7,22 +7,29 @@ public with sharing class OpportunityUtils
     // to the database
     public void addOpportunitySizeToNameAndSave(List<Opportunity> opps)
     {
-        for (Opportunity opp : opps)
+        if(null!=opps)
         {
-            if (opp.Amount>100000)
+            List<Opportunity> oppsToUpsert = new List<Opportunity>();
+            for (Opportunity opp : opps)
             {
-                opp.Name+=' Large';
+                if (null!=opp)
+                {
+                    if (opp?.Amount>100000)
+                    {
+                        opp.Name+=' Large';
+                    }
+                    else if (opp?.Amount>50000)
+                    {
+                        opp.Name+=' Medium';
+                    }
+                    else 
+                    {
+                        opp.Name+=' Small';
+                    }
+                    oppsToUpsert.add(opp);
+                }
             }
-            else if (opp.Amount>50000)
-            {
-                opp.Name+=' Medium';
-            }
-            else 
-            {
-                opp.Name+=' Small';
-            }
-        }
-
-        upsert opps;
+            upsert oppsToUpsert;
+        }  
     }
 }
